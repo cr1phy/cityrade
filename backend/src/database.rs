@@ -5,22 +5,23 @@ use sea_orm::{
     MockDatabase,
     MockExecResult,
 };
+use std::sync::Arc;
 use uuid::Uuid;
-use crate::entity::account;
+use crate::entity::{account, prelude::Account};
 
 #[derive(Debug, Clone)]
 pub struct Database {
-    pub conn: DbConn,
+    pub conn: Arc<DbConn>,
 }
 
 impl Database {
     pub async fn new(database_url: &str) -> Result<Self, DbErr> {
         let conn = sea_orm::Database::connect(database_url).await?;
-        Ok(Self { conn })
+        Ok(Self { conn: Arc::new(conn) })
     }
 
     pub async fn new_mock() -> Self {
-        let connection = MockDatabase::new(DatabaseBackend::Postgres)
+        let conn = MockDatabase::new(DatabaseBackend::Postgres)
             .append_query_results(vec![
                 vec![account::Model {
                     id: Uuid::now_v7(),
@@ -40,7 +41,7 @@ impl Database {
             ])
             .into_connection();
 
-        Self { conn: connection }
+        Self { conn: Arc::new(conn) }
     }
 
     pub async fn save_account(&self, new_account: account::Model) -> Result<(), DbErr> {
@@ -53,15 +54,15 @@ impl Database {
             money: ActiveValue::Set(new_account.money),
             diamonds: ActiveValue::Set(new_account.diamonds),
         }
-        .insert(&self.conn)
+        .insert(self.conn.as_ref())
         .await?;
         Ok(())
     }
 
     pub async fn get_account_by_email(&self, email: &str) -> Result<account::Model, DbErr> {
-        account::Entity::find()
+        Account::find()
             .filter(account::Column::Email.eq(email))
-            .one(&self.conn)
+            .one(&*self.conn)
             .await?
             .ok_or(DbErr::Custom("Account not found".to_string()))
     }

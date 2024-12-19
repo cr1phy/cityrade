@@ -27,7 +27,7 @@ async fn main() -> io::Result<()> {
     let server_url = format!("{host}:{port}");
 
     let db = Database::new(&db_url).await.unwrap();
-    Migrator::up(&db.conn, None).await.unwrap();
+    Migrator::up(db.conn.as_ref(), None).await.unwrap();
 
     let state = AppState { db };
 
@@ -45,7 +45,7 @@ mod tests {
         use serde_json::json;
         use crate::{routes, AppState, database::Database};
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_status() {
             let app = test::init_service(App::new().configure(routes::init)).await;
             let req = test::TestRequest::get().uri("/").to_request();
@@ -57,7 +57,7 @@ mod tests {
             assert_eq!(body["status"], "Ok!");
         }
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_signup() {
             let state = web::Data::new(AppState {
                 db: Database::new_mock().await,
@@ -86,7 +86,7 @@ mod tests {
             assert_eq!(body["message"], "Account created");
         }
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_login_successful() {
             let state = web::Data::new(AppState {
                 db: Database::new_mock().await,
@@ -131,7 +131,7 @@ mod tests {
             assert!(body["token"].as_str().is_some());
         }
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_login_unsuccessful() {
             let app = test::init_service(App::new().configure(routes::init)).await;
 
@@ -153,7 +153,7 @@ mod tests {
             assert_eq!(body["error"], "Invalid email or password");
         }
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_logout() {
             let app = test::init_service(App::new().configure(routes::init)).await;
 
@@ -166,7 +166,7 @@ mod tests {
             assert_eq!(body["message"], "Logout successful");
         }
 
-        #[actix_web::test]
+        #[tokio::test]
         async fn test_twofa() {
             let app = test::init_service(App::new().configure(routes::init)).await;
 

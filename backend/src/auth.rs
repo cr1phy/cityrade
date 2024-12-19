@@ -2,6 +2,8 @@ use jsonwebtoken::{decode, encode, errors::Result as JwtResult, DecodingKey, Enc
 use serde::{Deserialize, Serialize};
 use std::env;
 use uuid::Uuid;
+use chrono::Duration;
+use rand::Rng;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -13,7 +15,7 @@ pub fn create_jwt(user_id: Uuid) -> JwtResult<String> {
     let secret = env::var("JWT_SECRET").expect("JWT_SECRET not set");
 
     let expiration = chrono::Utc::now()
-        .checked_add_signed(chrono::Duration::hours(24))
+        .checked_add_signed(Duration::hours(24))
         .expect("Failed to set expiration time")
         .timestamp() as usize;
 
@@ -34,7 +36,6 @@ pub fn decode_jwt(token: &str) -> JwtResult<Claims> {
 }
 
 pub fn generate_2fa_code() -> String {
-    use rand::Rng;
     let mut rng = rand::thread_rng();
     (0..6).map(|_| rng.gen_range(0..10).to_string()).collect()
 }

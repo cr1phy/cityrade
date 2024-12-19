@@ -2,7 +2,7 @@ use actix_web::{get, post, web, web::ServiceConfig, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use uuid::Uuid;
-use crate::{database::Database, entity::account, AppState};
+use crate::{entity::account, AppState};
 
 #[derive(Serialize, Deserialize)]
 pub struct SignupRequest {
