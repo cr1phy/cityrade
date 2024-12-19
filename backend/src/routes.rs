@@ -70,10 +70,9 @@ async fn login(state: web::Data<AppState>, data: web::Json<LoginRequest>) -> imp
         return HttpResponse::Unauthorized().json(json!({"error": "Invalid email or password"}));
     }
 
-    // let token = crate::auth::create_jwt(account.id).unwrap_or_else(|_| "".to_string());
+    let token = crate::auth::create_jwt(account.id).unwrap_or_else(|_| "".to_string());
 
-    // HttpResponse::Ok().json(json!({"message": "Login successful", "token": token}))
-    HttpResponse::Ok().json(json!({"message": "Login successful"}))
+    HttpResponse::Ok().json(json!({"message": "Login successful", "token": token}))
 }
 
 #[post("/auth/logout")]
@@ -81,18 +80,18 @@ async fn logout() -> impl Responder {
     HttpResponse::Ok().json(json!({"message": "Logout successful"}))
 }
 
-// #[post("/auth/ota")]
-// async fn twofa(data: web::Json<OtaRequest>) -> impl Responder {
-//     match crate::auth::validate_ota_code(&data.email, &data.code).await {
-//         Ok(_) => HttpResponse::Ok().json(json!({"message": "2FA success"})),
-//         Err(_) => HttpResponse::Unauthorized().json(json!({"error": "Invalid code"})),
-//     }
-// }
+#[post("/auth/ota")]
+async fn twofa(data: web::Json<OtaRequest>) -> impl Responder {
+    match crate::auth::validate_ota_code(&data.email, &data.code).await {
+        Ok(_) => HttpResponse::Ok().json(json!({"message": "2FA success"})),
+        Err(_) => HttpResponse::Unauthorized().json(json!({"error": "Invalid code"})),
+    }
+}
 
 pub fn init(cfg: &mut ServiceConfig) {
     cfg.service(status)
         .service(signup)
         .service(login)
-        .service(logout);
-        // .service(twofa);
+        .service(logout)
+        .service(twofa);
 }
