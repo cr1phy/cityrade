@@ -1,3 +1,5 @@
+#![feature(const_trait_impl)]
+
 mod auth;
 mod database;
 mod entity;

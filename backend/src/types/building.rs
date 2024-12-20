@@ -1,27 +1,79 @@
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum BuildingPurpose {
+    Residential,
+    Public,
+    Industrial,
+    Agricultural,
+    Other(String),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum BuildingStatus {
+    Planning,
+    UnderConstruction,
+    InUse,
+    NeedsRepair,
+    Abandoned,
+    Demolished,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Building {
-    pub id: Uuid,
+    pub id: u64,
     pub name: String,
-    pub sector_id: Uuid,
-    pub x: i32,
-    pub y: i32,
-    pub width: u32,
-    pub height: u32,
+    pub purpose: BuildingPurpose,
+    pub status: BuildingStatus,
+    pub size: (u32, u32),
+    pub coordinates: Option<(i32, i32)>,
 }
 
 impl Building {
-    pub fn new(name: &str, sector_id: Uuid, x: i32, y: i32, width: u32, height: u32) -> Self {
+    pub fn new(id: u64, name: &str, purpose: BuildingPurpose, size: (u32, u32)) -> Self {
         Self {
-            id: Uuid::now_v7(),
+            id,
             name: name.to_string(),
-            sector_id,
-            x,
-            y,
-            width,
-            height,
+            purpose,
+            status: BuildingStatus::Planning,
+            size,
+            coordinates: None,
         }
     }
 }
+
+pub const HOUSE: Building = Building {
+    id: 1,
+    name: "House".to_string(),
+    purpose: BuildingPurpose::Residential,
+    status: BuildingStatus::Planning,
+    size: (2, 2),
+    coordinates: None,
+};
+
+pub const FARM: Building = Building {
+    id: 2,
+    name: "Farm".to_string(),
+    purpose: BuildingPurpose::Agricultural,
+    status: BuildingStatus::Planning,
+    size: (3, 3),
+    coordinates: None,
+};
+
+pub const FACTORY: Building = Building {
+    id: 3,
+    name: "Factory".to_string(),
+    purpose: BuildingPurpose::Industrial,
+    status: BuildingStatus::Planning,
+    size: (4, 4),
+    coordinates: None,
+};
+
+pub const PARK: Building = Building {
+    id: 4,
+    name: "Park".to_string(),
+    purpose: BuildingPurpose::Public,
+    status: BuildingStatus::Planning,
+    size: (3, 3),
+    coordinates: None,
+};
