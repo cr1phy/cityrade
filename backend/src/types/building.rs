@@ -9,8 +9,9 @@ pub enum BuildingPurpose {
     Other(String),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 pub enum BuildingStatus {
+    #[default]
     Planning,
     UnderConstruction,
     InUse,
@@ -41,39 +42,3 @@ impl Building {
         }
     }
 }
-
-pub const HOUSE: Building = Building {
-    id: 1,
-    name: "House".to_string(),
-    purpose: BuildingPurpose::Residential,
-    status: BuildingStatus::Planning,
-    size: (2, 2),
-    coordinates: None,
-};
-
-pub const FARM: Building = Building {
-    id: 2,
-    name: "Farm".to_string(),
-    purpose: BuildingPurpose::Agricultural,
-    status: BuildingStatus::Planning,
-    size: (3, 3),
-    coordinates: None,
-};
-
-pub const FACTORY: Building = Building {
-    id: 3,
-    name: "Factory".to_string(),
-    purpose: BuildingPurpose::Industrial,
-    status: BuildingStatus::Planning,
-    size: (4, 4),
-    coordinates: None,
-};
-
-pub const PARK: Building = Building {
-    id: 4,
-    name: "Park".to_string(),
-    purpose: BuildingPurpose::Public,
-    status: BuildingStatus::Planning,
-    size: (3, 3),
-    coordinates: None,
-};
