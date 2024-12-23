@@ -4,7 +4,7 @@ use std::fs;
 
 use crate::types::building::{Building, BuildingPurpose};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ShopItem {
     pub id: u64,
     pub name: String,
@@ -20,8 +20,8 @@ impl ShopItem {
             name: self.name.clone(),
             purpose: self.purpose.clone(),
             size: self.size,
-            status: Default::default(),
             coordinates: None,
+            ..Default::default()
         }
     }
 }

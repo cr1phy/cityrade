@@ -37,7 +37,7 @@ pub fn decode_jwt(token: &str) -> JwtResult<Claims> {
 
 pub fn generate_2fa_code() -> String {
     let mut rng = rand::thread_rng();
-    (0..6).map(|_| rng.gen_range(0..10).to_string()).collect()
+    (0..12).map(|_| rng.gen_range(0..10).to_string()).collect()
 }
 
 pub async fn validate_ota_code(email: &str, code: &str) -> Result<(), String> {
