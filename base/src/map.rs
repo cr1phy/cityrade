@@ -64,7 +64,7 @@ impl Map {
                     .map(|x| Chunk::generate(perlin, self.seed, x, self.visible_y - 1))
                     .collect();
                 self.chunks.insert(0, new_row);
-            },
+            }
             Direction::Down => {
                 self.visible_y += 1;
                 let new_row: Vec<Chunk> = (self.visible_x - 1..=self.visible_x + 1)
@@ -72,17 +72,25 @@ impl Map {
                     .map(|x| Chunk::generate(perlin, self.seed, x, self.visible_y + 1))
                     .collect();
                 self.chunks.push(new_row);
-            },
+            }
             Direction::Left => {
                 self.visible_x -= 1;
                 for row in &mut self.chunks {
-                    row.insert(0, Chunk::generate(perlin, self.seed, self.visible_x - 1, row[0].y));
+                    row.insert(
+                        0,
+                        Chunk::generate(perlin, self.seed, self.visible_x - 1, row[0].y),
+                    );
                 }
-            },
+            }
             Direction::Right => {
                 self.visible_x += 1;
                 for row in &mut self.chunks {
-                    row.push(Chunk::generate(perlin, self.seed, self.visible_x + 1, row[0].y));
+                    row.push(Chunk::generate(
+                        perlin,
+                        self.seed,
+                        self.visible_x + 1,
+                        row[0].y,
+                    ));
                 }
             }
         }
@@ -127,10 +135,18 @@ impl Chunk {
             let mut row_terrain = Vec::with_capacity(CHUNK_SIZE);
             let mut row_resources = Vec::with_capacity(CHUNK_SIZE);
             for x in 0..CHUNK_SIZE {
-                let noise_value = perlin.get([((offset_x + x as i32) as f64) / 10.0, ((offset_y + y as i32) as f64) / 10.0, seed as f64]);
+                let noise_value = perlin.get([
+                    ((offset_x + x as i32) as f64) / 10.0,
+                    ((offset_y + y as i32) as f64) / 10.0,
+                    seed as f64,
+                ]);
                 row_terrain.push(TerrainType::from_noise(noise_value));
-                
-                let resource_value = perlin.get([((offset_x + x as i32) as f64) / 5.0, ((offset_y + y as i32) as f64) / 5.0, seed as f64]);
+
+                let resource_value = perlin.get([
+                    ((offset_x + x as i32) as f64) / 5.0,
+                    ((offset_y + y as i32) as f64) / 5.0,
+                    seed as f64,
+                ]);
                 row_resources.push(Some(ResourceType::from_noise(resource_value)));
             }
             terrain.push(row_terrain);

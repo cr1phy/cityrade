@@ -34,7 +34,13 @@ pub struct Account {
 }
 
 impl Account {
-    pub fn new(id: Uuid, username: String, email: String, password_hash: Vec<u8>, role: Role) -> Self {
+    pub fn new(
+        id: Uuid,
+        username: String,
+        email: String,
+        password_hash: Vec<u8>,
+        role: Role,
+    ) -> Self {
         Self {
             id,
             username,

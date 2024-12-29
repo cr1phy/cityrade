@@ -26,13 +26,6 @@ jobs:
         profile: minimal
         override: true
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
-
-    - name: Build
-      run: cargo build --verbose
-      working-directory: ./backend
-
-    - name: Run tests
+    - name: Run tests in directory of types
       run: cargo test --verbose
-      working-directory: ./backend
+      working-directory: ./base
