@@ -1,16 +1,7 @@
-mod auth;
-mod database;
-mod entity;
-mod routes;
-mod types;
-#[cfg(test)]
-mod tests;
-
 use std::{env, io};
 
-use crate::database::Database;
 use actix_web::{App, HttpServer};
-use migration::{Migrator, MigratorTrait};
+use sea_orm::Database;
 
 #[derive(Debug, Clone)]
 struct AppState {
@@ -29,7 +20,6 @@ async fn main() -> io::Result<()> {
     let server_url = format!("{host}:{port}");
 
     let db = Database::new(&db_url).await.unwrap();
-    Migrator::up(db.conn.as_ref(), None).await.unwrap();
 
     let state = AppState { db };
 
