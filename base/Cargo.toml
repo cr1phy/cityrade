@@ -3,14 +3,10 @@ name = "cityrade"
 version = "0.1.0"
 edition = "2021"
 
-[workspace]
-members = [".", "macros"]
-
 [dependencies]
 chrono = { version = "0.4.39", features = ["serde"] }
 noise = "0.9.0"
 rand = "0.8.5"
 rayon = "1.10.0"
-serde = { version = "1.0.216", features = ["derive"] }
+serde = { version = "1.0.217", features = ["derive"] }
 uuid = { version = "1.11.0", features = ["serde", "v4", "v7"] }
-cityrade-macros = { path = "macros" }

@@ -1,11 +1,11 @@
 use std::{env, io};
 
 use actix_web::{App, HttpServer};
-use sea_orm::Database;
+use sea_orm::{Database, DbConn};
 
 #[derive(Debug, Clone)]
 struct AppState {
-    db: Database,
+    db: DbConn,
 }
 
 #[tokio::main]
