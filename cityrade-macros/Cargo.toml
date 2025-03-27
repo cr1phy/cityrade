@@ -1,0 +1,23 @@
+[package]
+name = "cityrade-macros"
+version = "0.1.0"
+edition = "2024"
+authors = ["Sergey Krifov <cr1phy@mail.ru>"]
+description = "Процедурные макросы для cityrade"
+repository = "https://github.com/username/cityrade"
+license = "MIT"
+readme = "../README.md"
+publish = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2.0", features = ["full", "extra-traits", "parsing"] }
+quote = "1.0"
+proc-macro2 = "1.0"
+cityrade-types = { path = "../cityrade-types" }
+uuid = { version = "1.4", features = ["v4"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+async-trait = "0.1"

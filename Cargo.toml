@@ -1,0 +1,37 @@
+[package]
+name = "cityrade"
+version = "0.1.0"
+edition = "2024"
+authors = ["Sergey Krifov <cr1phy@mail.ru>"]
+description = "Городская торгово-экономическая симуляция"
+repository = "https://github.com/username/cityrade"
+license = "MIT"
+readme = "README.md"
+
+[workspace]
+members = [".", "cityrade-types", "cityrade-macros"]
+resolver = "2"
+
+[profile.dev]
+opt-level = 0
+debug = true
+lto = "off"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+debug = false
+strip = true
+panic = "abort"
+
+[profile.bench]
+opt-level = 3
+debug = false
+lto = "thin"
+strip = true
+codegen-units = 1
+
+[dependencies]
+cityrade-types = { path = "cityrade-types" }
+cityrade-macros = { path = "cityrade-macros" }
