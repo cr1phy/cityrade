@@ -9,7 +9,10 @@ pub mod faction;
 pub mod generator;
 pub mod item;
 pub mod market;
+<<<<<<< HEAD
 pub mod player;
+=======
+>>>>>>> d7ffaf0 (initial)
 pub mod plugin;
 pub mod population;
 pub mod quest;
@@ -17,6 +20,7 @@ pub mod random_events;
 pub mod resources;
 pub mod technology;
 pub mod world;
+<<<<<<< HEAD
 pub mod achievements;
 
 // Модуль prelude для удобного импорта часто используемых типов
@@ -81,6 +85,8 @@ impl<T> VecExt<T> for Vec<T> {
         self.iter_mut().find(|item| item.id() == id)
     }
 }
+=======
+>>>>>>> d7ffaf0 (initial)
 
 #[cfg(test)]
 mod tests;

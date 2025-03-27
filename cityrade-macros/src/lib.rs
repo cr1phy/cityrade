@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 use cityrade_types::resources::ResourceType;
 use proc_macro::TokenStream;
 use quote::{quote, format_ident};
@@ -18,6 +19,13 @@ struct StructureConfig {
     min_distance: u32,
 }
 
+=======
+use proc_macro::TokenStream;
+use quote::{quote, format_ident};
+use syn::{parse_macro_input, DeriveInput, Ident, Data, Fields, parse_quote};
+use std::collections::HashMap;
+
+>>>>>>> d7ffaf0 (initial)
 /// Макрос для создания плагинов игрового сервера
 /// 
 /// Этот макрос упрощает создание плагинов, автоматически реализуя трейт Plugin.
@@ -74,11 +82,33 @@ pub fn derive_plugin(input: TokenStream) -> TokenStream {
     let mut plugin_license = String::new();
     
     for attr in &input.attrs {
+<<<<<<< HEAD
         if attr.meta.path().is_ident("plugin") {
             if let syn::Meta::List(meta_list) = &attr.meta {
                 for nested_meta in meta_list.tokens.clone().into_iter() {
                     // Упрощенная версия для демонстрации
                     // Здесь нужно использовать syn::parse2() для парсинга токенов
+=======
+        if attr.path.is_ident("plugin") {
+            if let Ok(meta) = attr.parse_meta() {
+                if let syn::Meta::List(meta_list) = meta {
+                    for nested_meta in meta_list.nested.iter() {
+                        if let syn::NestedMeta::Meta(syn::Meta::NameValue(name_value)) = nested_meta {
+                            let ident = name_value.path.get_ident().unwrap().to_string();
+                            if let syn::Lit::Str(lit_str) = &name_value.lit {
+                                let value = lit_str.value();
+                                match ident.as_str() {
+                                    "name" => plugin_name = value,
+                                    "version" => plugin_version = value,
+                                    "description" => plugin_description = value,
+                                    "author" => plugin_author = value,
+                                    "license" => plugin_license = value,
+                                    _ => {}
+                                }
+                            }
+                        }
+                    }
+>>>>>>> d7ffaf0 (initial)
                 }
             }
         }
@@ -88,8 +118,25 @@ pub fn derive_plugin(input: TokenStream) -> TokenStream {
     if plugin_name.is_empty() {
         plugin_name = name.to_string();
     }
+<<<<<<< HEAD
     
     // Генерируем код
+=======
+    if plugin_version.is_empty() {
+        plugin_version = "1.0.0".to_string();
+    }
+    if plugin_description.is_empty() {
+        plugin_description = format!("Плагин {}", name);
+    }
+    if plugin_author.is_empty() {
+        plugin_author = "Unknown".to_string();
+    }
+    if plugin_license.is_empty() {
+        plugin_license = "Unknown".to_string();
+    }
+    
+    // Генерируем реализацию трейта Plugin
+>>>>>>> d7ffaf0 (initial)
     let expanded = quote! {
         #[async_trait::async_trait]
         impl cityrade_types::plugin::Plugin for #name {
@@ -114,14 +161,38 @@ pub fn derive_plugin(input: TokenStream) -> TokenStream {
             }
             
             async fn initialize(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+<<<<<<< HEAD
+=======
+                if let Some(method) = self.as_any_mut().downcast_mut::<#name>() {
+                    if let Some(method) = method.method_on_initialize() {
+                        return method.await;
+                    }
+                }
+>>>>>>> d7ffaf0 (initial)
                 Ok(())
             }
             
             async fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+<<<<<<< HEAD
+=======
+                if let Some(method) = self.as_any_mut().downcast_mut::<#name>() {
+                    if let Some(method) = method.method_on_enable() {
+                        return method.await;
+                    }
+                }
+>>>>>>> d7ffaf0 (initial)
                 Ok(())
             }
             
             async fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+<<<<<<< HEAD
+=======
+                if let Some(method) = self.as_any_mut().downcast_mut::<#name>() {
+                    if let Some(method) = method.method_on_disable() {
+                        return method.await;
+                    }
+                }
+>>>>>>> d7ffaf0 (initial)
                 Ok(())
             }
             
@@ -133,6 +204,23 @@ pub fn derive_plugin(input: TokenStream) -> TokenStream {
                 self
             }
         }
+<<<<<<< HEAD
+=======
+        
+        impl #name {
+            fn method_on_initialize(&mut self) -> Option<impl std::future::Future<Output = Result<(), Box<dyn std::error::Error>>> + '_> {
+                None
+            }
+            
+            fn method_on_enable(&mut self) -> Option<impl std::future::Future<Output = Result<(), Box<dyn std::error::Error>>> + '_> {
+                None
+            }
+            
+            fn method_on_disable(&mut self) -> Option<impl std::future::Future<Output = Result<(), Box<dyn std::error::Error>>> + '_> {
+                None
+            }
+        }
+>>>>>>> d7ffaf0 (initial)
     };
     
     TokenStream::from(expanded)
@@ -167,6 +255,7 @@ pub fn derive_plugin(input: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn handler(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as syn::ItemImpl);
+<<<<<<< HEAD
     let self_ty = &input.self_ty;
     
     let mut event_handlers = Vec::new();
@@ -184,6 +273,24 @@ pub fn handler(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     }
                 };
                 event_handlers.push(handler);
+=======
+    let name = &input.self_ty;
+    
+    let mut handlers = Vec::new();
+    
+    for item in &input.items {
+        if let syn::ImplItem::Method(method) = item {
+            let method_name = &method.sig.ident;
+            let method_name_str = method_name.to_string();
+            
+            // Добавляем обработчик в соответствии с его именем
+            if method_name_str.starts_with("on_") {
+                let event_name = method_name_str.strip_prefix("on_").unwrap();
+                let handler = quote! {
+                    #method
+                };
+                handlers.push(handler);
+>>>>>>> d7ffaf0 (initial)
             }
         }
     }
@@ -191,10 +298,17 @@ pub fn handler(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let expanded = quote! {
         #input
         
+<<<<<<< HEAD
         impl #self_ty {
             pub fn register_handlers(&self, event_system: &mut cityrade_types::events::EventSystem) {
                 // Регистрация обработчиков
                 #(#event_handlers)*
+=======
+        impl #name {
+            // Здесь могут быть добавлены методы для регистрации обработчиков
+            pub fn register_handlers(&self, plugin_manager: &mut cityrade_types::plugin::PluginManager) {
+                // Регистрация обработчиков событий будет реализована здесь
+>>>>>>> d7ffaf0 (initial)
             }
         }
     };
@@ -248,6 +362,7 @@ pub fn handler(_attr: TokenStream, item: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro]
 pub fn create_plugin(input: TokenStream) -> TokenStream {
+<<<<<<< HEAD
     let input_str = input.to_string();
     
     // Очень простая реализация для примера
@@ -313,6 +428,11 @@ pub fn create_plugin(input: TokenStream) -> TokenStream {
     };
     
     TokenStream::from(expanded)
+=======
+    // Реализация макроса для создания плагинов
+    // В этой версии просто возвращаем пустой TokenStream
+    TokenStream::new()
+>>>>>>> d7ffaf0 (initial)
 }
 
 /// Макрос для определения нового типа здания
@@ -346,9 +466,18 @@ pub fn create_plugin(input: TokenStream) -> TokenStream {
 pub fn building_type(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as syn::ExprStruct);
     
+<<<<<<< HEAD
     let mut name = String::new();
     let mut id = String::new();
     let mut description = String::new();
+=======
+    // Извлекаем поля из макроса
+    let mut name = String::new();
+    let mut id = String::new();
+    let mut description = String::new();
+    let mut base_cost = Vec::new();
+    let mut production = HashMap::new();
+>>>>>>> d7ffaf0 (initial)
     
     for field in &input.fields {
         if let syn::Member::Named(ident) = &field.member {
@@ -356,6 +485,7 @@ pub fn building_type(input: TokenStream) -> TokenStream {
             
             match field_name.as_str() {
                 "name" => {
+<<<<<<< HEAD
                     if let syn::Expr::Lit(expr_lit) = &field.expr {
                         if let syn::Lit::Str(lit_str) = &expr_lit.lit {
                             name = lit_str.value();
@@ -374,6 +504,34 @@ pub fn building_type(input: TokenStream) -> TokenStream {
                         if let syn::Lit::Str(lit_str) = &expr_lit.lit {
                             description = lit_str.value();
                         }
+=======
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        name = s.value();
+                    }
+                },
+                "id" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        id = s.value();
+                    }
+                },
+                "description" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        description = s.value();
+                    }
+                },
+                "base_cost" => {
+                    if let syn::Expr::Block(block) = &field.expr {
+                        // Парсим блок с ресурсами
+                        // Здесь нужна дополнительная логика для извлечения списка ресурсов
+                        // ...
+                    }
+                },
+                "production" => {
+                    if let syn::Expr::Block(block) = &field.expr {
+                        // Парсим блок с производством
+                        // Здесь нужна дополнительная логика для извлечения производственных эффектов
+                        // ...
+>>>>>>> d7ffaf0 (initial)
                     }
                 },
                 _ => {}
@@ -381,18 +539,28 @@ pub fn building_type(input: TokenStream) -> TokenStream {
         }
     }
     
+<<<<<<< HEAD
     // Создаем идентификатор для структуры
     let struct_ident = format_ident!("{}", id);
     
     // Генерируем код для нового типа здания
     let expanded = quote! {
         pub struct #struct_ident {
+=======
+    // Генерируем код для создания нового типа здания
+    let expanded = quote! {
+        pub struct #id {
+>>>>>>> d7ffaf0 (initial)
             pub name: String,
             pub id: String,
             pub description: String,
         }
         
+<<<<<<< HEAD
         impl #struct_ident {
+=======
+        impl #id {
+>>>>>>> d7ffaf0 (initial)
             pub fn new() -> Self {
                 Self {
                     name: #name.to_string(),
@@ -402,6 +570,7 @@ pub fn building_type(input: TokenStream) -> TokenStream {
             }
         }
         
+<<<<<<< HEAD
         impl cityrade_types::building::BuildingType for #struct_ident {
             fn display_name(&self) -> &str {
                 &self.name
@@ -417,6 +586,30 @@ pub fn building_type(input: TokenStream) -> TokenStream {
             
             fn production_effect(&self, level: u32) -> Vec<(cityrade_types::resources::ResourceType, i32)> {
                 vec![]
+=======
+        impl cityrade_types::building::BuildingType for #id {
+            fn display_name(&self) -> &str {
+                &#name
+            }
+            
+            fn description(&self) -> &str {
+                &#description
+            }
+            
+            fn base_cost(&self) -> Vec<(cityrade_types::resources::ResourceType, u32)> {
+                vec![
+                    // Здесь будут ресурсы, указанные в base_cost
+                    // ...
+                ]
+            }
+            
+            fn production_effect(&self, level: u32) -> Vec<(cityrade_types::resources::ResourceType, i32)> {
+                match level {
+                    // Здесь будут эффекты в зависимости от уровня
+                    // ...
+                    _ => vec![]
+                }
+>>>>>>> d7ffaf0 (initial)
             }
         }
     };
@@ -538,8 +731,18 @@ pub fn building(input: TokenStream) -> TokenStream {
 pub fn world_generator(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as syn::ExprStruct);
     
+<<<<<<< HEAD
     let mut seed = quote!(None);
     let mut size = quote!((1000, 1000));
+=======
+    // Извлекаем поля из макроса
+    let mut seed = None;
+    let mut width = 1000u64;
+    let mut height = 1000u64;
+    let mut biomes = HashMap::new();
+    let mut resources = HashMap::new();
+    let mut structures = HashMap::new();
+>>>>>>> d7ffaf0 (initial)
     
     for field in &input.fields {
         if let syn::Member::Named(ident) = &field.member {
@@ -547,26 +750,61 @@ pub fn world_generator(input: TokenStream) -> TokenStream {
             
             match field_name.as_str() {
                 "seed" => {
+<<<<<<< HEAD
                     if let syn::Expr::Lit(expr_lit) = &field.expr {
                         if let syn::Lit::Int(lit_int) = &expr_lit.lit {
                             let seed_value = lit_int.base10_parse::<u64>().unwrap_or(0);
                             seed = quote!(Some(#seed_value));
+=======
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Int(i), .. }) = &field.expr {
+                        if let Ok(s) = i.base10_parse::<u64>() {
+                            seed = Some(s);
+>>>>>>> d7ffaf0 (initial)
                         }
                     }
                 },
                 "size" => {
+<<<<<<< HEAD
                     size = quote!(#field.expr);
+=======
+                    // Парсим размер мира
+                    // ...
+                },
+                "biomes" => {
+                    // Парсим биомы
+                    // ...
+                },
+                "resources" => {
+                    // Парсим ресурсы
+                    // ...
+                },
+                "structures" => {
+                    // Парсим структуры
+                    // ...
+>>>>>>> d7ffaf0 (initial)
                 },
                 _ => {}
             }
         }
     }
     
+<<<<<<< HEAD
     let expanded = quote! {
         {
             let mut generator = cityrade_types::world::WorldGenerator::new(#seed);
             let (width, height) = #size;
             let world = generator.generate(width, height);
+=======
+    // Генерируем код для создания генератора мира
+    let expanded = quote! {
+        {
+            let mut generator = cityrade_types::world::WorldGenerator::new(#seed);
+            let world = generator.generate(#width, #height);
+            
+            // Здесь можно добавить дополнительные настройки в зависимости от указанных биомов,
+            // ресурсов и структур
+            
+>>>>>>> d7ffaf0 (initial)
             world
         }
     };
@@ -611,6 +849,7 @@ pub fn derive_building_type(input: TokenStream) -> TokenStream {
     let mut building_name = String::new();
     let mut building_id = String::new();
     let mut building_description = String::new();
+<<<<<<< HEAD
     let mut base_costs: Vec<(ResourceType, u32)> = Vec::new();
     let mut production_effects: HashMap<u32, Vec<(ResourceType, i32)>> = HashMap::new();
     
@@ -622,6 +861,19 @@ pub fn derive_building_type(input: TokenStream) -> TokenStream {
             // Извлекаем стоимость строительства
             // ...
         } else if attr.path().is_ident("production") {
+=======
+    let mut base_costs = Vec::new();
+    let mut production_effects = HashMap::new();
+    
+    for attr in &input.attrs {
+        if attr.path.is_ident("building") {
+            // Извлекаем основные характеристики здания
+            // ...
+        } else if attr.path.is_ident("cost") {
+            // Извлекаем стоимость строительства
+            // ...
+        } else if attr.path.is_ident("production") {
+>>>>>>> d7ffaf0 (initial)
             // Извлекаем эффекты производства
             // ...
         }
@@ -710,6 +962,7 @@ pub fn derive_world_generator(input: TokenStream) -> TokenStream {
     // Извлекаем атрибуты генератора
     let mut generator_name = String::new();
     let mut generator_description = String::new();
+<<<<<<< HEAD
     let mut biomes: HashMap<String, f32> = HashMap::new();
     let mut resources: HashMap<String, ResourceConfig> = HashMap::new();
     let mut structures: HashMap<String, StructureConfig> = HashMap::new();
@@ -725,6 +978,23 @@ pub fn derive_world_generator(input: TokenStream) -> TokenStream {
             // Извлекаем ресурсы
             // ...
         } else if attr.path().is_ident("structures") {
+=======
+    let mut biomes = HashMap::new();
+    let mut resources = HashMap::new();
+    let mut structures = HashMap::new();
+    
+    for attr in &input.attrs {
+        if attr.path.is_ident("generator") {
+            // Извлекаем основные характеристики генератора
+            // ...
+        } else if attr.path.is_ident("biomes") {
+            // Извлекаем биомы
+            // ...
+        } else if attr.path.is_ident("resources") {
+            // Извлекаем ресурсы
+            // ...
+        } else if attr.path.is_ident("structures") {
+>>>>>>> d7ffaf0 (initial)
             // Извлекаем структуры
             // ...
         }
@@ -791,8 +1061,18 @@ pub fn derive_world_generator(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn event_handler(input: TokenStream) -> TokenStream {
     let input_str = input.to_string();
+<<<<<<< HEAD
     
     // Простая демонстрационная реализация
+=======
+    let mut handlers = Vec::new();
+    
+    // Вот здесь нужна более сложная логика парсинга, поскольку
+    // формат event_handler! более свободный, чем обычная структура.
+    // В данном случае мы делаем простую реализацию
+    
+    // Генерируем код для каждого обработчика событий
+>>>>>>> d7ffaf0 (initial)
     let expanded = quote! {
         struct EventHandlers {
             registered: bool,
@@ -810,6 +1090,7 @@ pub fn event_handler(input: TokenStream) -> TokenStream {
                     return;
                 }
                 
+<<<<<<< HEAD
                 // Регистрируем обработчики событий
                 event_system.register_handler::<cityrade_types::events::PlayerJoinEvent>(
                     "player_join_handler".to_string(),
@@ -820,6 +1101,11 @@ pub fn event_handler(input: TokenStream) -> TokenStream {
                         cityrade_types::events::EventResult::Continue
                     }
                 );
+=======
+                // Здесь будет код регистрации всех обработчиков событий
+                
+                #(#handlers)*
+>>>>>>> d7ffaf0 (initial)
                 
                 self.registered = true;
             }
@@ -865,10 +1151,17 @@ pub fn command(input: TokenStream) -> TokenStream {
     
     // Извлекаем поля из макроса
     let mut name = String::new();
+<<<<<<< HEAD
     let mut aliases: Vec<String> = Vec::new();
     let mut permission = "default.permission".to_string();
     let mut usage = "".to_string();
     let mut description = "".to_string();
+=======
+    let mut aliases = Vec::new();
+    let mut permission = String::new();
+    let mut usage = String::new();
+    let mut description = String::new();
+>>>>>>> d7ffaf0 (initial)
     let mut min_args = 0;
     let mut handler = None;
     
@@ -878,6 +1171,7 @@ pub fn command(input: TokenStream) -> TokenStream {
             
             match field_name.as_str() {
                 "name" => {
+<<<<<<< HEAD
                     if let syn::Expr::Lit(expr_lit) = &field.expr {
                         if let syn::Lit::Str(lit_str) = &expr_lit.lit {
                             name = lit_str.value();
@@ -892,6 +1186,35 @@ pub fn command(input: TokenStream) -> TokenStream {
                                     aliases.push(lit_str.value());
                                 }
                             }
+=======
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        name = s.value();
+                    }
+                },
+                "aliases" => {
+                    // Извлекаем список псевдонимов
+                    // ...
+                },
+                "permission" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        permission = s.value();
+                    }
+                },
+                "usage" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        usage = s.value();
+                    }
+                },
+                "description" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(s), .. }) = &field.expr {
+                        description = s.value();
+                    }
+                },
+                "min_args" => {
+                    if let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Int(i), .. }) = &field.expr {
+                        if let Ok(n) = i.base10_parse::<u32>() {
+                            min_args = n;
+>>>>>>> d7ffaf0 (initial)
                         }
                     }
                 },
@@ -904,6 +1227,7 @@ pub fn command(input: TokenStream) -> TokenStream {
     }
     
     // Проверяем, что все необходимые поля указаны
+<<<<<<< HEAD
     if name.is_empty() {
         return TokenStream::from(quote! {
             compile_error!("Command must have a name");
@@ -944,6 +1268,50 @@ pub fn command(input: TokenStream) -> TokenStream {
                 
                 fn min_args(&self) -> u32 {
                     #min_args
+=======
+    if name.is_empty() || handler.is_none() {
+        return TokenStream::from(quote! {
+            compile_error!("Command must have at least a name and a handler");
+        });
+    }
+    
+    // Генерируем код для создания команды
+    let handler_expr = handler.unwrap();
+    let expanded = quote! {
+        {
+            struct CommandHandler {
+                name: String,
+                aliases: Vec<String>,
+                permission: String,
+                usage: String,
+                description: String,
+                min_args: u32,
+            }
+            
+            impl cityrade_types::commands::Command for CommandHandler {
+                fn name(&self) -> &str {
+                    &self.name
+                }
+                
+                fn aliases(&self) -> &[String] {
+                    &self.aliases
+                }
+                
+                fn permission(&self) -> &str {
+                    &self.permission
+                }
+                
+                fn usage(&self) -> &str {
+                    &self.usage
+                }
+                
+                fn description(&self) -> &str {
+                    &self.description
+                }
+                
+                fn min_args(&self) -> u32 {
+                    self.min_args
+>>>>>>> d7ffaf0 (initial)
                 }
                 
                 fn execute(&self, sender: &dyn cityrade_types::commands::CommandSender, args: Vec<String>) -> bool {
@@ -952,7 +1320,18 @@ pub fn command(input: TokenStream) -> TokenStream {
                 }
             }
             
+<<<<<<< HEAD
             CommandHandler
+=======
+            CommandHandler {
+                name: #name.to_string(),
+                aliases: vec![#(#aliases.to_string()),*],
+                permission: #permission.to_string(),
+                usage: #usage.to_string(),
+                description: #description.to_string(),
+                min_args: #min_args,
+            }
+>>>>>>> d7ffaf0 (initial)
         }
     };
     
@@ -983,6 +1362,10 @@ pub fn config(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as syn::ItemStruct);
     let struct_name = &input.ident;
     
+<<<<<<< HEAD
+=======
+    // Извлекаем поля и их значения по умолчанию
+>>>>>>> d7ffaf0 (initial)
     let mut fields = Vec::new();
     let mut default_values = Vec::new();
     
@@ -995,8 +1378,29 @@ pub fn config(input: TokenStream) -> TokenStream {
                 pub #field_name: #field_type
             });
             
+<<<<<<< HEAD
             default_values.push(quote! {
                 #field_name: Default::default()
+=======
+            // Ищем значение по умолчанию, если оно указано в атрибуте #[default = "..."]
+            let mut default_value = None;
+            for attr in &field.attrs {
+                if attr.path.is_ident("default") {
+                    // Извлекаем значение по умолчанию
+                    // ...
+                }
+            }
+            
+            // Если не указано явно, используем стандартное значение
+            if default_value.is_none() {
+                default_value = Some(quote! {
+                    Default::default()
+                });
+            }
+            
+            default_values.push(quote! {
+                #field_name: #default_value
+>>>>>>> d7ffaf0 (initial)
             });
         }
     }
