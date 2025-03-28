@@ -1,13 +1,10 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-<<<<<<< HEAD
 use std::time::Duration;
 use crate::resources::{ResourceType, BuildingType};
 use crate::diplomacy::FactionAction;
 use std::str::FromStr;
-=======
->>>>>>> d7ffaf0 (initial)
 
 /// Статус квеста
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -110,35 +107,22 @@ pub enum RewardType {
 /// Награда за квест
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QuestReward {
-<<<<<<< HEAD
     pub resources: HashMap<ResourceType, u32>,
     pub reputation: HashMap<String, i32>,
     pub unlockables: Vec<String>,
-=======
-    pub reward_type: RewardType,
-    pub description: String,
->>>>>>> d7ffaf0 (initial)
 }
 
 impl QuestReward {
     /// Создает новую награду за квест
-<<<<<<< HEAD
     pub fn new(resources: HashMap<ResourceType, u32>, reputation: HashMap<String, i32>, unlockables: Vec<String>) -> Self {
         Self {
             resources,
             reputation,
             unlockables,
-=======
-    pub fn new(reward_type: RewardType, description: &str) -> Self {
-        Self {
-            reward_type,
-            description: description.to_string(),
->>>>>>> d7ffaf0 (initial)
         }
     }
     
     /// Создает награду типа Resource
-<<<<<<< HEAD
     pub fn resource(resource_type: &str, amount: u32, _description: &str) -> Self {
         let mut resources = HashMap::new();
         resources.insert(ResourceType::from_str(resource_type).unwrap(), amount);
@@ -155,45 +139,14 @@ impl QuestReward {
         let mut resources = HashMap::new();
         resources.insert(ResourceType::from_str(item_id).unwrap(), amount);
         Self::new(resources, HashMap::new(), Vec::new())
-=======
-    pub fn resource(resource_type: &str, amount: u32, description: &str) -> Self {
-        Self::new(
-            RewardType::Resource(resource_type.to_string(), amount),
-            description,
-        )
-    }
-    
-    /// Создает награду типа Experience
-    pub fn experience(amount: u32) -> Self {
-        Self::new(
-            RewardType::Experience(amount),
-            &format!("{} единиц опыта", amount),
-        )
-    }
-    
-    /// Создает награду типа Item
-    pub fn item(item_id: &str, amount: u32, description: &str) -> Self {
-        Self::new(
-            RewardType::Item(item_id.to_string(), amount),
-            description,
-        )
->>>>>>> d7ffaf0 (initial)
     }
     
     /// Создает награду типа Reputation
     pub fn reputation(faction: &str, amount: i32) -> Self {
-<<<<<<< HEAD
         let _direction = if amount >= 0 { "+" } else { "" };
         let mut reputation = HashMap::new();
         reputation.insert(faction.to_string(), amount);
         Self::new(HashMap::new(), reputation, Vec::new())
-=======
-        let direction = if amount >= 0 { "+" } else { "" };
-        Self::new(
-            RewardType::Reputation(faction.to_string(), amount),
-            &format!("{}{} репутации с фракцией {}", direction, amount, faction),
-        )
->>>>>>> d7ffaf0 (initial)
     }
 }
 
@@ -212,7 +165,6 @@ pub enum QuestCategory {
     Hidden,     // Скрытые квесты
 }
 
-<<<<<<< HEAD
 /// Тип квеста
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum QuestType {
@@ -222,23 +174,16 @@ pub enum QuestType {
     DiplomaticAction(FactionAction),
 }
 
-=======
->>>>>>> d7ffaf0 (initial)
 /// Основная структура квеста
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Quest {
     pub id: String,
     pub title: String,
     pub description: String,
-<<<<<<< HEAD
     pub quest_type: QuestType,
     pub reward: QuestReward,
     pub time_limit: Option<Duration>,
     pub objectives: Vec<QuestObjective>,
-=======
-    pub objectives: Vec<QuestObjective>,
-    pub rewards: Vec<QuestReward>,
->>>>>>> d7ffaf0 (initial)
     pub status: QuestStatus,
     pub category: QuestCategory,
     pub level: u32,
@@ -260,15 +205,10 @@ impl Quest {
             id: id.into(),
             title: title.into(),
             description: description.into(),
-<<<<<<< HEAD
             quest_type: QuestType::ResourceCollection(HashMap::new()),
             reward: QuestReward::new(HashMap::new(), HashMap::new(), Vec::new()),
             time_limit: None,
             objectives: Vec::new(),
-=======
-            objectives: Vec::new(),
-            rewards: Vec::new(),
->>>>>>> d7ffaf0 (initial)
             status: QuestStatus::NotStarted,
             category: QuestCategory::Side,
             level: 1,
@@ -291,11 +231,7 @@ impl Quest {
     
     /// Добавляет награду к квесту
     pub fn with_reward(mut self, reward: QuestReward) -> Self {
-<<<<<<< HEAD
         self.reward = reward;
-=======
-        self.rewards.push(reward);
->>>>>>> d7ffaf0 (initial)
         self
     }
     
@@ -572,11 +508,7 @@ impl QuestManager {
                 .ok_or_else(|| format!("Квест с id {} не найден", quest_id))?;
             
             quest.complete()?;
-<<<<<<< HEAD
             quest_rewards = quest.reward.clone();
-=======
-            quest_rewards = quest.rewards.clone();
->>>>>>> d7ffaf0 (initial)
         }
         
         // Обновляем списки
@@ -586,11 +518,7 @@ impl QuestManager {
         // Обновляем доступность других квестов, которые могли зависеть от этого
         self.update_available_quests();
         
-<<<<<<< HEAD
         Ok(vec![quest_rewards])
-=======
-        Ok(quest_rewards)
->>>>>>> d7ffaf0 (initial)
     }
     
     /// Проваливает квест
@@ -619,7 +547,6 @@ impl QuestManager {
         let mut quests_to_update = Vec::new();
         
         for (id, quest) in &self.quests {
-<<<<<<< HEAD
             if quest.status == QuestStatus::NotStarted 
                 && quest.is_available_for_level(self.player_level) 
                 && !quest.is_expired() 
@@ -633,20 +560,6 @@ impl QuestManager {
                     
                 if prerequisites_completed {
                     quests_to_update.push(id.clone());
-=======
-            if quest.status == QuestStatus::NotStarted {
-                if quest.is_available_for_level(self.player_level) && !quest.is_expired() {
-                    let prerequisites_completed = quest.prerequisites.iter()
-                        .all(|prereq_id| {
-                            self.quests.get(prereq_id)
-                                .map(|q| q.status == QuestStatus::Completed)
-                                .unwrap_or(false)
-                        });
-                        
-                    if prerequisites_completed {
-                        quests_to_update.push(id.clone());
-                    }
->>>>>>> d7ffaf0 (initial)
                 }
             }
         }
@@ -849,7 +762,6 @@ mod tests {
         let status_failed = QuestStatus::Failed;
         let status_completed = QuestStatus::Completed;
         let status_in_progress = QuestStatus::InProgress;
-<<<<<<< HEAD
         let status_available = QuestStatus::Available;
         let status_not_started = QuestStatus::NotStarted;
         
@@ -887,28 +799,5 @@ mod tests {
         assert_eq!(status_in_progress.get_color(), "yellow");
         assert_eq!(status_available.get_color(), "blue");
         assert_eq!(status_not_started.get_color(), "gray");
-=======
-        
-        assert!(status_failed.is_failed());
-        assert!(!status_completed.is_failed());
-        assert!(!status_in_progress.is_failed());
-        
-        // Тест для метода is_completed
-        assert!(!status_failed.is_completed());
-        assert!(status_completed.is_completed());
-        assert!(!status_in_progress.is_completed());
-        
-        // Тест для метода is_active
-        assert!(!status_failed.is_active());
-        assert!(!status_completed.is_active());
-        assert!(status_in_progress.is_active());
-        
-        // Тест для метода is_available
-        assert!(!status_failed.is_available());
-        assert!(!status_completed.is_available());
-        assert!(!status_in_progress.is_available());
-        assert!(QuestStatus::Available.is_available());
-        assert!(QuestStatus::NotStarted.is_available());
->>>>>>> d7ffaf0 (initial)
     }
 } 

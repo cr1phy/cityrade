@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 use serde::{Serialize, Deserialize};
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use super::resources::{ResourceType, BuildingEffect};
-=======
-use std::any::{Any, TypeId};
-use std::collections::HashMap;
-use std::fmt::Debug;
-use std::sync::Arc;
->>>>>>> d7ffaf0 (initial)
 
 /// Трейт для событий
 pub trait Event: Any + Debug + Send + Sync {
@@ -28,13 +21,7 @@ pub trait Event: Any + Debug + Send + Sync {
     }
     
     /// Преобразовать событие в Any для даункастинга
-<<<<<<< HEAD
     fn as_any(&self) -> &dyn Any;
-=======
-    fn as_any(&'static self) -> &'static dyn Any {
-        &'static self
-    }
->>>>>>> d7ffaf0 (initial)
 }
 
 /// Результат обработки события
@@ -125,11 +112,7 @@ impl EventSystem {
     
     /// Вызвать событие и выполнить все зарегистрированные обработчики
     pub fn call_event(&self, event: &dyn Event) -> bool {
-<<<<<<< HEAD
         let type_id = TypeId::of::<dyn Event>();
-=======
-        let type_id = event.type_id();
->>>>>>> d7ffaf0 (initial)
         let mut cancelled = false;
         
         if let Some(handlers) = self.handlers.get(&type_id) {
@@ -193,13 +176,10 @@ impl Event for PlayerJoinEvent {
     fn is_cancellable(&self) -> bool {
         true
     }
-<<<<<<< HEAD
 
     fn as_any(&self) -> &dyn Any {
         self
     }
-=======
->>>>>>> d7ffaf0 (initial)
 }
 
 /// Событие отключения игрока
@@ -225,13 +205,10 @@ impl Event for PlayerLeaveEvent {
     fn name(&self) -> &str {
         "player_leave"
     }
-<<<<<<< HEAD
 
     fn as_any(&self) -> &dyn Any {
         self
     }
-=======
->>>>>>> d7ffaf0 (initial)
 }
 
 /// Событие строительства здания
@@ -280,7 +257,6 @@ impl Event for BuildingConstructedEvent {
     fn is_cancellable(&self) -> bool {
         true
     }
-<<<<<<< HEAD
 
     fn as_any(&self) -> &dyn Any {
         self
@@ -307,6 +283,4 @@ pub struct RandomEvent {
     pub id: String,
     pub description: String,
     pub effects: Vec<EventOutcome>,
-=======
->>>>>>> d7ffaf0 (initial)
 } 

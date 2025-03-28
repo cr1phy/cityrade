@@ -1,9 +1,5 @@
 use crate::city::City;
-<<<<<<< HEAD
 use crate::resources::{Resource, ResourceType};
-=======
-use crate::resources::Resource;
->>>>>>> d7ffaf0 (initial)
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use uuid::Uuid;
@@ -164,11 +160,7 @@ impl Player {
     
     /// Возвращает общую ценность всех городов игрока
     pub fn get_total_cities_value(&self) -> u64 {
-<<<<<<< HEAD
         self.cities.iter().map(|city| city.resources.get(&ResourceType::Gold) as u64).sum()
-=======
-        self.cities.iter().map(|city| city.get_value() as u64).sum()
->>>>>>> d7ffaf0 (initial)
     }
     
     /// Проверяет, активен ли игрок (был онлайн в последние N минут)

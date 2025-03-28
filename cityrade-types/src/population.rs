@@ -147,7 +147,6 @@ impl Population {
     }
 
     pub fn get_production_bonus(&self, resource: &ResourceType) -> f32 {
-<<<<<<< HEAD
         match resource {
             ResourceType::Food => 0.5,
             ResourceType::Wood => 0.3,
@@ -157,53 +156,16 @@ impl Population {
             ResourceType::Coal => 0.25,
             ResourceType::Tools => 0.35,
             ResourceType::LuxuryGoods => 0.15,
-=======
-        // Разные классы дают бонусы к разным ресурсам
-        match resource {
-            ResourceType::Wood => {
-                let peasants = *self.classes.get(&PopulationClass::Peasant).unwrap_or(&0) as f32;
-                let workers = *self.classes.get(&PopulationClass::Worker).unwrap_or(&0) as f32;
-                (peasants * 0.5 + workers * 1.0) / self.total() as f32
-            }
-            ResourceType::Stone => {
-                let workers = *self.classes.get(&PopulationClass::Worker).unwrap_or(&0) as f32;
-                workers * 1.5 / self.total() as f32
-            }
-            ResourceType::Gold => {
-                let merchants = *self.classes.get(&PopulationClass::Merchant).unwrap_or(&0) as f32;
-                let nobles = *self.classes.get(&PopulationClass::Noble).unwrap_or(&0) as f32;
-                let scholars = *self.classes.get(&PopulationClass::Scholar).unwrap_or(&0) as f32;
-                (merchants * 2.0 + nobles * 3.0 + scholars * 1.0) / self.total() as f32
-            }
-            ResourceType::Food => {
-                let peasants = *self.classes.get(&PopulationClass::Peasant).unwrap_or(&0) as f32;
-                let merchants = *self.classes.get(&PopulationClass::Merchant).unwrap_or(&0) as f32;
-                (peasants * 2.0 + merchants * 0.5) / self.total() as f32
-            }
-            ResourceType::Iron => {
-                let workers = *self.classes.get(&PopulationClass::Worker).unwrap_or(&0) as f32;
-                let soldiers = *self.classes.get(&PopulationClass::Soldier).unwrap_or(&0) as f32;
-                (workers * 1.5 + soldiers * 0.5) / self.total() as f32
-            }
->>>>>>> d7ffaf0 (initial)
             ResourceType::Crystal => {
                 let scholars = *self.classes.get(&PopulationClass::Scholar).unwrap_or(&0) as f32;
                 scholars * 3.0 / self.total() as f32
             }
             ResourceType::Population => {
-<<<<<<< HEAD
-=======
-                // Влияние на прирост населения
->>>>>>> d7ffaf0 (initial)
                 let nobles = *self.classes.get(&PopulationClass::Noble).unwrap_or(&0) as f32;
                 let scholars = *self.classes.get(&PopulationClass::Scholar).unwrap_or(&0) as f32;
                 (nobles * 0.5 + scholars * 0.5) / self.total() as f32
             }
             ResourceType::Energy => {
-<<<<<<< HEAD
-=======
-                // Производство энергии
->>>>>>> d7ffaf0 (initial)
                 let workers = *self.classes.get(&PopulationClass::Worker).unwrap_or(&0) as f32;
                 let scholars = *self.classes.get(&PopulationClass::Scholar).unwrap_or(&0) as f32;
                 (workers * 1.0 + scholars * 1.5) / self.total() as f32

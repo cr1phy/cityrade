@@ -1,7 +1,6 @@
 // cityrade-types/src/diplomacy.rs
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-<<<<<<< HEAD
 use super::resources::ResourceType;
 
 /// Типы дипломатических отношений между фракциями
@@ -13,22 +12,6 @@ pub enum RelationType {
     Conflict,
     Alliance,
     TradePartner,
-=======
-
-/// Типы дипломатических отношений между фракциями
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum RelationType {
-    /// Полное сотрудничество, общая оборона, торговля без пошлин
-    Alliance,
-    /// Дружеские отношения, сниженные торговые пошлины
-    Friendly,
-    /// Стандартные отношения без бонусов и штрафов
-    Neutral,
-    /// Повышенные пошлины, ограничения на передвижение
-    Tense,
-    /// Торговое эмбарго, возможность военных действий
-    Conflict,
->>>>>>> d7ffaf0 (initial)
 }
 
 impl Default for RelationType {
@@ -81,27 +64,17 @@ impl DiplomaticRelation {
     pub fn update_relation_type(&mut self) {
         self.relation_type = match self.reputation {
             i if i >= 75 => RelationType::Alliance,
-<<<<<<< HEAD
             i if i >= 25 => RelationType::TradePartner,
             i if i > -25 => RelationType::Neutral,
             i if i > -75 => RelationType::Conflict,
-=======
-            i if i >= 25 => RelationType::Friendly,
-            i if i > -25 => RelationType::Neutral,
-            i if i > -75 => RelationType::Tense,
->>>>>>> d7ffaf0 (initial)
             _ => RelationType::Conflict,
         };
 
         // Обновляем торговый модификатор в зависимости от отношений
         self.trade_modifier = match self.relation_type {
             RelationType::Alliance => 1.5,
-<<<<<<< HEAD
             RelationType::TradePartner => 1.2,
             RelationType::Friendly => 1.1,
-=======
-            RelationType::Friendly => 1.2,
->>>>>>> d7ffaf0 (initial)
             RelationType::Neutral => 1.0,
             RelationType::Tense => 0.8,
             RelationType::Conflict => 0.0, // Эмбарго - торговля запрещена
@@ -190,7 +163,6 @@ impl DiplomacyManager {
             .or_insert_with(DiplomaticRelation::new)
             .add_action(action, time);
     }
-<<<<<<< HEAD
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -216,6 +188,4 @@ pub enum FactionAction {
     PeaceTreaty,
     AllianceProposal,
     WarDeclaration,
-=======
->>>>>>> d7ffaf0 (initial)
 } 

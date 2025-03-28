@@ -2,7 +2,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt;
-<<<<<<< HEAD
 use std::default::Default;
 use std::str::FromStr;
 
@@ -19,20 +18,6 @@ pub enum ResourceType {
     Population,
     Energy,
     Crystal,
-=======
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
-pub enum ResourceType {
-    Gold,
-    Wood,
-    Stone,
-    Food,
-    Iron,
-    Crystal,
-    Population,
-    #[default]
-    Energy,
->>>>>>> d7ffaf0 (initial)
 }
 
 impl fmt::Display for ResourceType {
@@ -43,23 +28,16 @@ impl fmt::Display for ResourceType {
             ResourceType::Stone => write!(f, "Камень"),
             ResourceType::Food => write!(f, "Еда"),
             ResourceType::Iron => write!(f, "Железо"),
-<<<<<<< HEAD
+            ResourceType::Crystal => write!(f, "Кристаллы"),
+            ResourceType::Population => write!(f, "Население"),
+            ResourceType::Energy => write!(f, "Энергия"),
             ResourceType::Coal => write!(f, "Уголь"),
             ResourceType::Tools => write!(f, "Инструменты"),
             ResourceType::LuxuryGoods => write!(f, "Роскошные товары"),
-            ResourceType::Population => write!(f, "Население"),
-            ResourceType::Energy => write!(f, "Энергия"),
-            ResourceType::Crystal => write!(f, "Кристаллы"),
-=======
-            ResourceType::Crystal => write!(f, "Кристаллы"),
-            ResourceType::Population => write!(f, "Население"),
-            ResourceType::Energy => write!(f, "Энергия"),
->>>>>>> d7ffaf0 (initial)
         }
     }
 }
 
-<<<<<<< HEAD
 impl Default for ResourceType {
     fn default() -> Self {
         ResourceType::Food
@@ -108,8 +86,6 @@ pub enum BuildingEffect {
     StorageCapacity,
 }
 
-=======
->>>>>>> d7ffaf0 (initial)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Resource {
     resources: HashMap<ResourceType, u32>,
@@ -127,15 +103,9 @@ impl Resource {
         resources.insert(ResourceType::Stone, 50);
         resources.insert(ResourceType::Food, 200);
         resources.insert(ResourceType::Iron, 0);
-<<<<<<< HEAD
-        resources.insert(ResourceType::Coal, 0);
-        resources.insert(ResourceType::Tools, 0);
-        resources.insert(ResourceType::LuxuryGoods, 0);
-=======
         resources.insert(ResourceType::Crystal, 0);
         resources.insert(ResourceType::Population, 10);
         resources.insert(ResourceType::Energy, 50);
->>>>>>> d7ffaf0 (initial)
 
         // Начальная скорость производства
         production_rate.insert(ResourceType::Gold, 5);
@@ -143,15 +113,9 @@ impl Resource {
         production_rate.insert(ResourceType::Stone, 3);
         production_rate.insert(ResourceType::Food, 10);
         production_rate.insert(ResourceType::Iron, 0);
-<<<<<<< HEAD
         production_rate.insert(ResourceType::Coal, 0);
         production_rate.insert(ResourceType::Tools, 0);
         production_rate.insert(ResourceType::LuxuryGoods, 0);
-=======
-        production_rate.insert(ResourceType::Crystal, 0);
-        production_rate.insert(ResourceType::Population, 1);
-        production_rate.insert(ResourceType::Energy, 2);
->>>>>>> d7ffaf0 (initial)
 
         Resource {
             resources,

@@ -1,9 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-<<<<<<< HEAD
 use super::resources::{ResourceType, BuildingType};
-=======
->>>>>>> d7ffaf0 (initial)
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum TechnologyType {
@@ -56,11 +53,7 @@ pub enum TechnologyCategory {
 
 // Новая структура - эффект технологии
 #[derive(Debug, Clone, Serialize, Deserialize)]
-<<<<<<< HEAD
 pub struct TechnologyEffectData {
-=======
-pub struct TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
     pub description: String,          // Описание эффекта
     pub resource_bonus: Option<(String, f32)>, // (тип_ресурса, процент_бонуса)
     pub building_unlock: Option<String>, // Разблокируемое здание
@@ -78,11 +71,7 @@ pub struct Technology {
     pub prerequisites: Vec<TechnologyType>,
     pub category: TechnologyCategory, // Новое поле: категория технологии
     pub era: u32,                     // Новое поле: эра технологии
-<<<<<<< HEAD
     pub unlock_effects: Vec<TechnologyEffectData>,
-=======
-    pub unlock_effects: Vec<TechnologyEffect>, // Изменено: теперь используем структуру эффектов вместо строк
->>>>>>> d7ffaf0 (initial)
 }
 
 // Новая структура - статус исследования технологии
@@ -95,7 +84,6 @@ pub enum ResearchStatus {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TechnologyTree {
-<<<<<<< HEAD
     pub technologies: HashMap<TechnologyType, Technology>,
     pub research_status: HashMap<TechnologyType, ResearchStatus>,
     pub research_focus: Option<TechnologyType>,
@@ -118,36 +106,13 @@ pub enum TechnologyEffect {
     UnlockBuilding(BuildingType),
     DiplomaticCapacity(u32),
     TradeRouteSlot(u32),
-=======
-    technologies: HashMap<TechnologyType, Technology>,
-    research_status: HashMap<TechnologyType, ResearchStatus>, // Новое поле: статус исследования для каждой технологии
-    research_focus: Option<TechnologyType>,                  // Новое поле: текущий фокус исследования
-    completed_technologies: HashSet<TechnologyType>,         // Новое поле: множество завершенных технологий
-    research_points: u32,                                    // Новое поле: накопленные очки исследования
-    research_rate: u32,                                      // Новое поле: скорость получения очков исследования за ход
-    tech_bonuses: HashMap<String, f32>,                      // Новое поле: бонусы от технологий
->>>>>>> d7ffaf0 (initial)
 }
 
 impl TechnologyTree {
     pub fn new() -> Self {
-<<<<<<< HEAD
         TechnologyTree {
             technologies: Self::default_technologies(),
             research_status: HashMap::new(),
-=======
-        let technologies = Self::default_technologies();
-        let mut research_status = HashMap::new();
-        
-        // Инициализируем статус исследования для всех технологий
-        for tech_type in technologies.keys() {
-            research_status.insert(tech_type.clone(), ResearchStatus::NotStarted);
-        }
-        
-        TechnologyTree {
-            technologies,
-            research_status,
->>>>>>> d7ffaf0 (initial)
             research_focus: None,
             completed_technologies: HashSet::new(),
             research_points: 0,
@@ -171,11 +136,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Economic,
             era: 1,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Увеличивает производство пищи на 20%".to_string(),
                     resource_bonus: Some(("Food".to_string(), 0.2)),
                     building_unlock: Some("Farm".to_string()),
@@ -195,11 +156,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Economic,
             era: 1,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Увеличивает добычу камня на 20%".to_string(),
                     resource_bonus: Some(("Stone".to_string(), 0.2)),
                     building_unlock: Some("Mine".to_string()),
@@ -219,11 +176,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Economic,
             era: 1,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Увеличивает производство дерева на 20%".to_string(),
                     resource_bonus: Some(("Wood".to_string(), 0.2)),
                     building_unlock: Some("Sawmill".to_string()),
@@ -243,11 +196,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Construction,
             era: 1,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Позволяет строить базовые здания".to_string(),
                     resource_bonus: None,
                     building_unlock: Some("House".to_string()),
@@ -268,11 +217,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Economic,
             era: 1,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Позволяет строить рынки".to_string(),
                     resource_bonus: None,
                     building_unlock: Some("Market".to_string()),
@@ -296,11 +241,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Construction,
             era: 2,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Позволяет строить продвинутые здания".to_string(),
                     resource_bonus: None,
                     building_unlock: Some("Apartment".to_string()),
@@ -321,11 +262,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Economic,
             era: 2,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Увеличивает доход от золота на 15%".to_string(),
                     resource_bonus: Some(("Gold".to_string(), 0.15)),
                     building_unlock: Some("Bank".to_string()),
@@ -349,11 +286,7 @@ impl TechnologyTree {
             category: TechnologyCategory::Social,
             era: 2,
             unlock_effects: vec![
-<<<<<<< HEAD
                 TechnologyEffectData {
-=======
-                TechnologyEffect {
->>>>>>> d7ffaf0 (initial)
                     description: "Увеличивает скорость исследований на 20%".to_string(),
                     resource_bonus: None,
                     building_unlock: Some("School".to_string()),
