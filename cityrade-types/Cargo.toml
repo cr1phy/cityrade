@@ -2,14 +2,11 @@
 name = "cityrade-types"
 version = "0.1.0"
 edition = "2024"
-<<<<<<< HEAD
 authors = ["Sergey Krifov <cr1phy@mail.ru>"]
 description = "Типы данных для cityrade"
 repository = "https://github.com/username/cityrade"
 license = "MIT"
 readme = "../README.md"
-=======
->>>>>>> d7ffaf0 (initial)
 publish = true
 
 [dependencies]
@@ -22,7 +19,3 @@ hashbrown = { version = "0.15.2", features = ["serde"] }
 async-trait = "0.1.88"
 uuid = { version = "1.16.0", features = ["v4", "v7"] }
 rand_distr = "0.5.1"
-<<<<<<< HEAD
-cityrade-macros = { path = "../cityrade-macros" }
-=======
->>>>>>> d7ffaf0 (initial)
