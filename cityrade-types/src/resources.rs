@@ -86,7 +86,7 @@ pub enum BuildingEffect {
     StorageCapacity,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Resource {
     resources: HashMap<ResourceType, u32>,
     production_rate: HashMap<ResourceType, i32>,

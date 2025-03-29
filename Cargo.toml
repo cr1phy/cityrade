@@ -35,3 +35,4 @@ codegen-units = 1
 [dependencies]
 cityrade-types = { path = "cityrade-types" }
 cityrade-macros = { path = "cityrade-macros" }
+hashbrown = { version = "0.15.2", features = ["rayon", "serde"] }
